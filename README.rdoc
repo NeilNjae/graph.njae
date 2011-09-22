@@ -1,6 +1,6 @@
 = graph.njae
 
-Description goes here.
+A simple graph library in Ruby.
 
 == Contributing to graph.njae
  
