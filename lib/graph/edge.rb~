@@ -27,6 +27,7 @@ module Graph
   class Connection < OpenStruct
     def initialize
       super
+      self
     end
   end
 end

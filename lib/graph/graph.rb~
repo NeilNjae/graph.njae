@@ -6,6 +6,7 @@ module Graph
       super
       self.edges = Array.new
       self.vertices = Array.new
+      self
     end
     
     def <<(other)

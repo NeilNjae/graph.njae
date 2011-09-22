@@ -5,6 +5,7 @@ module Graph
     def initialize
       super
       self.edges = []
+      self
     end
     
     def connect(other)

@@ -1,6 +1,10 @@
 require 'ostruct'
 
+# A simple graph library
+
 module Graph
+  # A vertex in a graph. The edge can have arbitrary attributes,treated as 
+  # method names.
   class Vertex < OpenStruct
     def initialize
       super
@@ -8,6 +12,8 @@ module Graph
       self
     end
     
+    # Connect this vertex to another, creating an Edge to do so, and returning
+    # the Edge
     def connect(other)
       e = Edge.new
       e << self << other
@@ -16,11 +22,14 @@ module Graph
       e
     end
     
+    # Connect this vertex to another, creating an Edge to do so, and returning
+    # this Vertex
     def <<(other)
       connect(other)
       self
     end
     
+    # Return the set of neighbouring vertices
     def neighbours
       vertices = self.edges.map {|e| e.vertices}.flatten
       vertices_to_me = vertices.select {|v| v == self}
