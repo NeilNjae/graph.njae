@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
     "LICENSE.txt",
     "README.rdoc",
     "Rakefile",
+    "graph.njae.gemspec",
     "lib/graph.njae.rb",
     "lib/graph/edge.rb",
     "lib/graph/graph.rb",
