@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{graph.njae}
-  s.version = "0.1.0"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Neil Smith"]
@@ -27,9 +27,9 @@ Gem::Specification.new do |s|
     "VERSION",
     "graph.njae.gemspec",
     "lib/graph.njae.rb",
-    "lib/graph/edge.rb",
-    "lib/graph/graph.rb",
-    "lib/graph/vertex.rb",
+    "lib/graph.njae/edge.rb",
+    "lib/graph.njae/graph.rb",
+    "lib/graph.njae/vertex.rb",
     "spec/graph/edge_spec.rb",
     "spec/graph/graph_spec.rb",
     "spec/graph/vertex_spec.rb",
