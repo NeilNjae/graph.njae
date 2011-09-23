@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-module Graph
+module GraphNjae
   describe Vertex do
     let (:v) { Vertex.new }
     

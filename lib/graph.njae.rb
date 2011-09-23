@@ -1,3 +1,3 @@
-require 'graph/graph'
-require 'graph/edge'
-require 'graph/vertex'
+require 'graph.njae/graph'
+require 'graph.njae/edge'
+require 'graph.njae/vertex'
