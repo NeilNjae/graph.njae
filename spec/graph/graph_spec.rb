@@ -1,6 +1,13 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 module GraphNjae
+
+  class SVertex < Vertex
+  end
+  
+  class SEdge < Edge
+  end
+  
   describe Graph do
     let (:g) { Graph.new }
     describe "#initialize" do
@@ -53,6 +60,16 @@ module GraphNjae
         g.should have(2).edges
         g.edges.should include(e1)
         g.edges.should include(e2)
+      end
+      
+      it "adds a subclass of Vertex" do
+        g.vertices.should be_empty
+        v1 = SVertex.new
+        v2 = SVertex.new
+        g << v1 << v2
+        g.should have(2).vertices
+        g.vertices.should include(v1)
+        g.vertices.should include(v2)        
       end
     end # #<<
 

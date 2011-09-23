@@ -16,9 +16,9 @@ module GraphNjae
     
     # Add a Vertex or Edge to the graph.
     def <<(other)
-      if other.class == Vertex
+      if other.class.ancestors.include? Vertex
         self.vertices << other
-      elsif
+      elsif other.class.ancestors.include? Edge
         self.edges << other
       end
       self
