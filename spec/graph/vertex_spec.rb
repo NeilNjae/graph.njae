@@ -97,5 +97,130 @@ module GraphNjae
       end
 
     end # #connect
+    
+    describe "#neighbours" do
+      it "finds neighbours of a self loop" do
+        v << v
+        v.should have(1).neighbours
+        v.neighbours.should include v
+      end
+      
+      it "finds neighbours on an edge" do
+        v1 = Vertex.new
+        v << v1
+        v.should have(1).neighbours
+        v.neighbours.should include v1
+        v1.should have(1).neighbours
+        v1.neighbours.should include v
+      end
+      
+      it "finds neighbours with multiple edges" do
+        v1 = Vertex.new
+        v1.id = :v1
+        v << v1
+        v1 << v
+        v.should have(2).neighbours
+        v.neighbours.should include v1
+        v.neighbours.should_not include v
+        v1.should have(2).neighbours
+        v1.neighbours.should include v
+        v1.neighbours.should_not include v1
+      end
+      
+      it "finds neighbours with multiple self loops" do
+        v << v << v << v
+        v.should have(3).neighbours
+        v.neighbours.should include v
+        v.neighbours.uniq.length.should == 1
+      end
+      
+      it "finds neighbours with all sorts of edges" do
+        v1 = Vertex.new ; v1.id = :v1
+        v2 = Vertex.new ; v2.id = :v2
+        v3 = Vertex.new ; v3.id = :v3
+        v1 << v
+        v << v2
+        v2 << v3
+        v2 << v2
+        
+        v.should have(2).neighbours
+        v.neighbours.should include v1
+        v.neighbours.should include v2
+        
+        v1.should have(1).neighbours
+        v1.neighbours.should include v
+        
+        v2.should have(3).neighbours
+        v2.neighbours.should include v
+        v2.neighbours.should include v2
+        v2.neighbours.should include v3
+        
+        v3.should have(1).neighbours
+        v3.neighbours.should include v2
+      end
+      
+      it "finds neighbours in graphs with several vertices" do
+        v1 = Vertex.new ; v1.id = :v1
+        v2 = Vertex.new ; v2.id = :v2
+        v3 = Vertex.new ; v3.id = :v3
+        v4 = Vertex.new ; v4.id = :v4
+        v << v1
+        v1 << v2
+        v2 << v3
+        v << v3
+        v4 << v3
+        v.should have(2).neighbours
+        v.neighbours.should include v1
+        v.neighbours.should include v3
+        v.neighbours.should_not include v
+        v1.should have(2).neighbours
+        v1.neighbours.should include v
+        v1.neighbours.should include v2
+        v1.neighbours.should_not include v1
+        v2.should have(2).neighbours
+        v2.neighbours.should include v1
+        v2.neighbours.should include v3
+        v2.neighbours.should_not include v2
+        v3.should have(3).neighbours
+        v3.neighbours.should include v
+        v3.neighbours.should include v2
+        v3.neighbours.should include v4
+        v3.neighbours.should_not include v3
+        v4.should have(1).neighbours
+        v4.neighbours.should include v3
+        v4.neighbours.should_not include v4
+      end
+      
+      it "finds neighbours with multiple edges between vertices" do
+        v1 = Vertex.new ; v1.id = :v1
+        v2 = Vertex.new ; v2.id = :v2
+        v3 = Vertex.new ; v3.id = :v3
+        v1 << v1 << v
+        v << v2
+        v << v
+        v3 << v2
+        v2 << v3
+        v2 << v2
+        
+        v.should have(3).neighbours
+        v.neighbours.should include v1
+        v.neighbours.should include v2
+        v.neighbours.should include v
+        
+        v1.should have(2).neighbours
+        v1.neighbours.should include v
+        v1.neighbours.should include v1
+        
+        v2.should have(4).neighbours
+        v2.neighbours.should include v
+        v2.neighbours.should include v2
+        v2.neighbours.should include v3
+        v2.neighbours.uniq.length.should == 3
+        
+        v3.should have(2).neighbours
+        v3.neighbours.should include v2
+        v3.neighbours.uniq.length.should == 1
+      end
+    end # #neighbours
   end
 end

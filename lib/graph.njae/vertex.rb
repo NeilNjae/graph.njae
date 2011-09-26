@@ -31,10 +31,12 @@ module GraphNjae
     
     # Return the set of neighbouring vertices
     def neighbours
-      vertices = self.edges.map {|e| e.vertices}.flatten
-      vertices_to_me = vertices.select {|v| v == self}
-      other_vertices = vertices.select {|v| v != self}
-      (vertices_to_me[1..-1] || []) + other_vertices
+      #vertices = self.edges.map {|e| e.vertices}.flatten
+      #vertices_to_me = vertices.select {|v| v == self}
+      #other_vertices = vertices.select {|v| v != self}
+      #(vertices_to_me[1..-1] || []) + other_vertices#
+      self.edges.map {|e| e.vertices.take_while {|v| v != self} + 
+                      e.vertices.drop_while {|v| v != self}[1..-1]}.flatten
     end
     
   end
