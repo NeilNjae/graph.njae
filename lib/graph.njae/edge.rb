@@ -31,7 +31,7 @@ module GraphNjae
     
     # Return the connection object that joins this Edge to the specified Vertex
     def connection_at(vertex)
-      self.connections.select {|c| c.end.equal?  vertex}.first
+      self.connections.find {|c| c.end.equal?  vertex}
     end
   end
   
