@@ -49,10 +49,10 @@ module GraphNjae
           e2_vertices = e2.vertices
           source = product_graph.vertices.find {|v| v.g1_vertex == e1_vertices[0] and v.g2_vertex == e2_vertices[0]}
           destination = product_graph.vertices.find {|v| v.g1_vertex == e1_vertices[1] and v.g2_vertex == e2_vertices[1]}
-          pe1 = product_graph.connect source, destination
+          product_graph.connect source, destination
           source = product_graph.vertices.find {|v| v.g1_vertex == e1_vertices[0] and v.g2_vertex == e2_vertices[1]}
           destination = product_graph.vertices.find {|v| v.g1_vertex == e1_vertices[1] and v.g2_vertex == e2_vertices[0]}
-          pe2 = product_graph.connect source, destination
+          product_graph.connect source, destination
         end
       end
       product_graph
