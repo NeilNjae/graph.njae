@@ -6,8 +6,8 @@ module GraphNjae
   # A vertex in a graph. The edge can have arbitrary attributes,treated as 
   # method names.
   class Vertex < OpenStruct
-    def initialize
-      super
+    def initialize(values = {})
+      super(values)
       self.edges = []
       self
     end

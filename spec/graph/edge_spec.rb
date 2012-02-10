@@ -8,6 +8,15 @@ module GraphNjae
         e = Edge.new
         e.connections.should be_empty
       end
+      
+      it "creates an edge with some parameters" do
+        e = Edge.new :value1 => 1, :value2 => "value2", :value3 => :v3
+        e.value1.should == 1
+        e.value2.should == "value2"
+        e.value3.should == :v3
+        e.value4.should be_nil
+      end
+
     end # #initialize
     
     describe "adds attribues" do

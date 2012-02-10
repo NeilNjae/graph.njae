@@ -16,6 +16,15 @@ module GraphNjae
         g.edges.should be_empty
         g.vertices.should be_empty
       end
+      
+      it "creates a graph with some parameters" do
+        g = Graph.new :value1 => 1, :value2 => "value2", :value3 => :v3
+        g.value1.should == 1
+        g.value2.should == "value2"
+        g.value3.should == :v3
+        g.value4.should be_nil
+      end
+
     end # #initialize
       
     describe "adds attribues" do

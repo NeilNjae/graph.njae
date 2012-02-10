@@ -9,6 +9,14 @@ module GraphNjae
         v = Vertex.new
         v.edges.should be_empty
       end
+      
+      it "creates a vertex with some parameters" do
+        v = Vertex.new :value1 => 1, :value2 => "value2", :value3 => :v3
+        v.value1.should == 1
+        v.value2.should == "value2"
+        v.value3.should == :v3
+        v.value4.should be_nil
+      end
     end # #initialize
     
     describe "adds attribues" do

@@ -10,8 +10,8 @@ module GraphNjae
   # Each connection is handled by a Graph::Connection object, so that each end
   # of the Edge can have it's own attributes.
   class Edge < OpenStruct
-    def initialize
-      super
+    def initialize(values = {})
+      super(values)
       self.connections = []
       self
     end
