@@ -84,8 +84,51 @@ module GraphNjae
 
     describe "connect" do
       it "adds and records an edge between vertices" do
+        g.vertices.should be_empty
+        g.edges.should be_empty
+        v1 = Vertex.new(:name => :v1)
+        v2 = Vertex.new(:name => :v2)
+        g.connect(v1, v2)
+        
+        g.should have(2).vertices
+        g.vertices.should include(v1)
+        g.vertices.should include(v2)
+        g.should have(1).edges
       end
     end # #connect
+    
+    describe "product" do
+      it "finds a product graph of a pair of one-vertex graphs" do
+        g1 = Graph.new
+        g2 = Graph.new
+        g1v1 = Vertex.new
+        g1 << g1v1
+        g2v1 = Vertex.new
+        g2 << g2v1
+        product = g1.product g2
+        
+        product.should have(1).vertices
+        product.vertices.first.g1_vertex.should == g1v1
+        product.vertices.first.g2_vertex.should == g2v1
+        product.edges.should be_empty
+      end
+
+      it "finds a product graph of a pair of simple graphs" do
+        g1 = Graph.new
+        g2 = Graph.new
+        g1v1 = Vertex.new(:name => :g1v1)
+        g1v2 = Vertex.new(:name => :g1v2)
+        g1.connect(g1v1, g1v2)
+        g2v1 = Vertex.new(:name => :g2v1)
+        g2v2 = Vertex.new(:name => :g2v2)
+        g2.connect(g2v1, g2v2)
+        pg = g1.product g2
+        
+        pg.should have(4).vertices
+        pg.should have(2).edges
+      end
+
+    end
     
   end
 end

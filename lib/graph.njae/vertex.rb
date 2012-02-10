@@ -17,8 +17,8 @@ module GraphNjae
     def connect(other)
       e = Edge.new
       e << self << other
-      self.edges << e
-      other.edges << e unless self === other
+      # self.edges << e
+      # other.edges << e unless self === other
       e
     end
     

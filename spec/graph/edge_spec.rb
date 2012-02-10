@@ -35,11 +35,13 @@ module GraphNjae
         e.should have(1).connections
         e.should have(1).vertices
         e.vertices.should include(v1)
+        v1.edges.should include(e)
         e << v2
         e.should have(2).connections
         e.should have(2).vertices
         e.vertices.should include(v1)
         e.vertices.should include(v2)
+        v2.edges.should include(e)
       end
       
       it "adds several vertices to an edge" do

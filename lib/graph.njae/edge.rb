@@ -20,6 +20,7 @@ module GraphNjae
     def <<(other)
       c = Connection.new
       c.end = other
+      other.edges << self unless other.edges.include? self
       self.connections << c
       self
     end
@@ -38,8 +39,8 @@ module GraphNjae
   # A connection between an Edge and a Vertex.The connection can have arbitrary attributes,
   # treated as method names.
   class Connection < OpenStruct
-    def initialize
-      super
+    def initialize(values = {})
+      super(values)
       self
     end
   end
