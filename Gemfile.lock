@@ -25,7 +25,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler
-  jeweler
+  bundler (~> 1.0.0)
+  jeweler (~> 1.6.2)
   rdoc
-  rspec
+  rspec (~> 2.8.0)
