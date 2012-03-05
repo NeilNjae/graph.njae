@@ -35,7 +35,7 @@ module GraphNjae
     end
     
     # Form a product graph of this graph and the other.
-    # Return the new graph.
+    # Return the product graph.
     def product(other)
       product_graph = Graph.new
       self.vertices.each do |v1|
