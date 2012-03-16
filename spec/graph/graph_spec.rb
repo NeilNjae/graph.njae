@@ -127,7 +127,21 @@ module GraphNjae
         pg.should have(4).vertices
         pg.should have(2).edges
       end
+      
+      it "finds a product graph of not-quite-simple graph" do
+      end
 
+    end
+    
+    describe "similarity flood" do
+        it "similarity floods a graph of two nodes" do
+        end
+        
+        it "similarity floods a graph of three nodes, a -- b -- c" do
+        end
+        
+        it "simialrity floods a sample graph" do
+        end
     end
     
   end

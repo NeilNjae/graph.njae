@@ -58,5 +58,9 @@ module GraphNjae
       product_graph
     end
     
+    # Performs similarity flooding on a graph
+    def similarity_flood(&normalization)
+    end
+    
   end # class
 end
