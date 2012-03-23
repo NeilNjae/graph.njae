@@ -58,8 +58,43 @@ module GraphNjae
       product_graph
     end
     
+    
+    def initial_similarity
+      self.vertices.each do |v|
+        if block_given?
+          v.initial_similarity = yield v
+        else
+          v.initial_similarity = 1.0
+        end
+        v.similarity = v.initial_similarity
+      end
+    end
+    
     # Performs similarity flooding on a graph
-    def similarity_flood(&normalization)
+    # Assumes that the initial similarity has already been calculated
+    def similarity_flood(opts = {})
+      max_iterations = opts[:iterations] || 100
+      max_residual = opts[:max_residual] || 0.001
+      iteration = 1
+      residual = max_residual + 1
+      while residual > max_residual and iteration <= max_iterations
+        self.vertices.each do |v|
+          v.last_similarity = v.similarity
+        end
+        self.vertices.each do |v|
+           n = v.neighbours.length
+           v.neighbours.each do |neighbour|
+             neighbour.similarity += v.last_similarity / n
+           end
+        end
+        max_similarity = vertices.max {|v, w| v.similarity <=> w.similarity}.similarity
+        self.vertices.each do |v|
+          v.similarity = v.similarity / max_similarity
+        end
+        residual = Math.sqrt(self.vertices.reduce(0) {|a, v| a += (v.similarity - v.last_similarity) ** 2})
+        iteration += 1
+      end
+      
     end
     
   end # class

@@ -26,6 +26,5 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.0.0)
-  jeweler (~> 1.6.2)
-  rdoc
+  jeweler (~> 1.8.0)
   rspec (~> 2.8.0)

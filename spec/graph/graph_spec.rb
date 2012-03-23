@@ -133,8 +133,58 @@ module GraphNjae
 
     end
     
+    describe "initial_similarity" do
+      before(:each) do
+        g1 = Graph.new
+        g2 = Graph.new
+        g1v1 = Vertex.new(:name => :g1v1)
+        g1v2 = Vertex.new(:name => :g1v2)
+        g1.connect(g1v1, g1v2)
+        g2v1 = Vertex.new(:name => :g2v1)
+        g2v2 = Vertex.new(:name => :g2v2)
+        g2.connect(g2v1, g2v2)
+        @pg = g1.product g2
+      end
+      
+      def simple_name_similarity(n1, n2)
+        1 - n1.to_s.codepoints.to_a.delete_if {|c| n2.to_s.codepoints.to_a.include? c}.length / n1.to_s.length.to_f
+      end
+
+      it "should give all nodes an initial similarity of 1 if no block is given" do
+        @pg.initial_similarity
+        @pg.vertices.each do |v|
+          v.initial_similarity.should be_within(0.001).of(1.0)
+          v.similarity.should be_within(0.001).of(1.0)
+        end
+      end
+      
+      it "should give all nodes the similarity as defined by the given block" do
+        @pg.initial_similarity {|v| simple_name_similarity v.g1_vertex.name, v.g2_vertex.name}
+        @pg.vertices.each do |v|
+          v.initial_similarity.should be_within(0.001).of( simple_name_similarity v.g1_vertex.name, v.g2_vertex.name )
+          v.similarity.should be_within(0.001).of( simple_name_similarity v.g1_vertex.name, v.g2_vertex.name )
+        end
+
+      end
+    end
+    
     describe "similarity flood" do
         it "similarity floods a graph of two nodes" do
+          g1 = Graph.new
+          g2 = Graph.new
+          g1v1 = Vertex.new(:name => :g1v1)
+          g1v2 = Vertex.new(:name => :g1v2)
+          g1.connect(g1v1, g1v2)
+          g2v1 = Vertex.new(:name => :g2v1)
+          g2v2 = Vertex.new(:name => :g2v2)
+          g2.connect(g2v1, g2v2)
+          pg = g1.product g2
+
+          pg.initial_similarity
+          pg.similarity_flood
+          pg.vertices.each do |v|
+            v.similarity.should be_within(0.001).of(1.0)
+          end
         end
         
         it "similarity floods a graph of three nodes, a -- b -- c" do
