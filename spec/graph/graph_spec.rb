@@ -21,7 +21,7 @@ module GraphNjae
     describe "adds attribues" do
       it "adds then reports arbitrary attributes" do
         g.score = 15
-        g.score == 15
+        g.score.should == 15
       end
     end # adds attributes
     
