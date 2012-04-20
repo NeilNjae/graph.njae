@@ -85,9 +85,16 @@ module GraphNjae
         e.vertices.should include(v)
         e.vertices.should include(v1)
 
-              e.should have(2).connections
+        e.should have(2).connections
       end
 
+      it "connects two vertices by an edge with attributes" do
+        v1 = Vertex.new
+        v1.id = :v1
+        e = v.connect(v1, {:type => :edge_type})
+        e.type.should == :edge_type
+      end
+      
       it "creates a self-connection" do
         e = v.connect v
         
@@ -102,6 +109,11 @@ module GraphNjae
         e.vertices.should include(v)
 
         e.should have(2).connections
+      end
+
+      it "creates a self-connection with an edge with attributes" do
+        e = v.connect(v, {:type => :edge_type})
+        e.type.should == :edge_type
       end
 
     end # #connect

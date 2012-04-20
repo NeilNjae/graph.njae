@@ -34,6 +34,20 @@ module GraphNjae
     def connection_at(vertex)
       self.connections.find {|c| c.end.equal?  vertex}
     end
+    
+    # Return the vertex at the other end of the one given.
+    # Self-loops should still return the vertex
+    def other_end(vertex)
+      if self.vertices[0] == vertex
+        self.vertices[1]
+      else
+        self.vertices[0]
+      end
+    end
+    
+    def to_s
+      '<E: ' + self.type.to_s + ' [' + self.vertices.map {|n| n.to_s}.join(', ') + '] >'
+    end
   end
   
   # A connection between an Edge and a Vertex.The connection can have arbitrary attributes,

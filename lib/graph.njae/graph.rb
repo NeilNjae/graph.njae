@@ -26,10 +26,10 @@ module GraphNjae
     
     # Connects two vertices, creating and storing a new edge
     # Also adds the vertices, unless they're already in the graph
-    def connect(vertex1, vertex2)
+    def connect(vertex1, vertex2, edge_attributes = {})
       self.vertices << vertex1 unless self.vertices.include? vertex1
       self.vertices << vertex2 unless self.vertices.include? vertex2
-      edge = Edge.new
+      edge = Edge.new(edge_attributes)
       self.edges << edge
       edge << vertex1 << vertex2
     end
@@ -46,15 +46,18 @@ module GraphNjae
       self.edges.each do |e1|
         e1_vertices = e1.vertices
         other.edges.each do |e2|
-          e2_vertices = e2.vertices
-          source = product_graph.vertices.find {|v| v.g1_vertex == e1_vertices[0] and v.g2_vertex == e2_vertices[0]}
-          destination = product_graph.vertices.find {|v| v.g1_vertex == e1_vertices[1] and v.g2_vertex == e2_vertices[1]}
-          product_graph.connect source, destination
-          source = product_graph.vertices.find {|v| v.g1_vertex == e1_vertices[0] and v.g2_vertex == e2_vertices[1]}
-          destination = product_graph.vertices.find {|v| v.g1_vertex == e1_vertices[1] and v.g2_vertex == e2_vertices[0]}
-          product_graph.connect source, destination
+          if e1.type == e2.type
+            e2_vertices = e2.vertices
+            source = product_graph.vertices.find {|v| v.g1_vertex == e1_vertices[0] and v.g2_vertex == e2_vertices[0]}
+            destination = product_graph.vertices.find {|v| v.g1_vertex == e1_vertices[1] and v.g2_vertex == e2_vertices[1]}
+            product_graph.connect source, destination
+            source = product_graph.vertices.find {|v| v.g1_vertex == e1_vertices[0] and v.g2_vertex == e2_vertices[1]}
+            destination = product_graph.vertices.find {|v| v.g1_vertex == e1_vertices[1] and v.g2_vertex == e2_vertices[0]}
+            product_graph.connect source, destination
+          end
         end
       end
+      product_graph.vertices.reject! {|v| v.neighbours.empty?}      
       product_graph
     end
     
@@ -78,20 +81,34 @@ module GraphNjae
       iteration = 1
       residual = max_residual + 1
       while residual > max_residual and iteration <= max_iterations
+# puts "Starting iteration #{iteration}"        
         self.vertices.each do |v|
           v.last_similarity = v.similarity
         end
         self.vertices.each do |v|
-           n = v.neighbours.length
-           v.neighbours.each do |neighbour|
-             neighbour.similarity += v.last_similarity / n
-           end
+# puts "Processing vertex #{v.name}"          
+          edge_groups = v.edges.group_by {|e| e.type }
+# puts "  Edge groups {#{edge_groups.keys.map {|t| t.to_s + ' => {' + edge_groups[t].map {|e| e.to_s}.join(', ')}.join('; ')}}"          
+          edge_groups.each do |type, edges|
+# puts "    Processing group type #{type}"
+            n = edges.length
+            edges.each do |e|
+              e.other_end(v).similarity += v.last_similarity / n
+            end
+          end
         end
-        max_similarity = vertices.max {|v, w| v.similarity <=> w.similarity}.similarity
+#         self.vertices.each do |v|
+#           n = v.neighbours.length
+#           v.neighbours.each do |neighbour|
+#             neighbour.similarity += v.last_similarity / n
+#           end
+#         end
+        max_similarity = vertices.map {|v| v.similarity}.max
         self.vertices.each do |v|
           v.similarity = v.similarity / max_similarity
         end
         residual = Math.sqrt(self.vertices.reduce(0) {|a, v| a += (v.similarity - v.last_similarity) ** 2})
+# puts "Residual = #{residual.round(3)}, sims = #{self.vertices.map {|v| v.name + " = " + v.similarity.round(2).to_s}}"
         iteration += 1
       end
       

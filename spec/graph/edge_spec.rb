@@ -16,7 +16,6 @@ module GraphNjae
         e.value3.should == :v3
         e.value4.should be_nil
       end
-
     end # #initialize
     
     describe "adds attribues" do
@@ -29,8 +28,8 @@ module GraphNjae
     describe "#<<" do
       it "adds a new vertex to an edge (with a connection)" do
         e.connections.should be_empty
-        v1 = Vertex.new
-        v2 = Vertex.new
+        v1 = Vertex.new :name => :v1
+        v2 = Vertex.new :name => :v2
         e << v1
         e.should have(1).connections
         e.should have(1).vertices
@@ -46,8 +45,8 @@ module GraphNjae
       
       it "adds several vertices to an edge" do
         e.connections.should be_empty
-        v1 = Vertex.new
-        v2 = Vertex.new
+        v1 = Vertex.new :name => :v1
+        v2 = Vertex.new :name => :v2
         e << v1 << v2
         e.vertices.should include(v1)
         e.vertices.should include(v2)
@@ -67,8 +66,8 @@ module GraphNjae
     describe "connection_at" do
       it "returns the connection that links to a vertex" do
         e.connections.should be_empty
-        v1 = Vertex.new
-        v2 = Vertex.new
+        v1 = Vertex.new :name => :v1
+        v2 = Vertex.new :name => :v2
         e << v1 << v2
         
         e.connection_at(v1).end.should be v1
@@ -77,9 +76,9 @@ module GraphNjae
       
       it "returns nil if there is no connection to that vertex" do
         e.connections.should be_empty
-        v1 = Vertex.new
-        v2 = Vertex.new
-        v3 = Vertex.new
+        v1 = Vertex.new :name => :v1
+        v2 = Vertex.new :name => :v2
+        v3 = Vertex.new :name => :v3
         e << v1 << v2
         
         e.connection_at(v3).should be nil
@@ -87,14 +86,49 @@ module GraphNjae
       
       it "returns the vertex for a self-loop" do
         e.connections.should be_empty
-        v1 = Vertex.new
+        v1 = Vertex.new :name => :v1
         e << v1 << v1
         
         e.connection_at(v1).end.should be v1
       end
-
-    
     end # #connection_at
+    
+    describe "other_end" do
+      it "returns the vertex at the other end of the given one" do
+        e.connections.should be_empty
+        v1 = Vertex.new :name => :v1
+        v2 = Vertex.new :name => :v2
+        e << v1 << v2
+        
+        e.other_end(v1).should be v2
+        e.other_end(v2).should be v1
+      end
+      
+      it "returns the same vertex in a self-loop" do
+        e.connections.should be_empty
+        v1 = Vertex.new :name => :v1
+        e << v1 << v1
+        
+        e.other_end(v1).should be v1
+      end
+      
+      it "returns one of the connected edges if given a vertex not connected to it" do
+        e.connections.should be_empty
+        v1 = Vertex.new :name => :v1
+        v2 = Vertex.new :name => :v2
+        v3 = Vertex.new :name => :v3
+        e << v1 << v2
+        
+        [v1, v2].should include e.other_end(v3)
+      end 
+      
+      it "returns nil if it can't return something sensible" do
+        v1 = Vertex.new :name => :v1
+        e.other_end(v1).should be_nil
+        e << v1
+        e.other_end(v1).should be_nil
+      end
+    end # other_end
   end # Edge
   
   describe Connection do

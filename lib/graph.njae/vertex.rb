@@ -14,8 +14,8 @@ module GraphNjae
     
     # Connect this vertex to another, creating an Edge to do so, and returning
     # the Edge
-    def connect(other)
-      e = Edge.new
+    def connect(other, edge_attributes = {})
+      e = Edge.new edge_attributes
       e << self << other
       # self.edges << e
       # other.edges << e unless self === other
@@ -37,6 +37,10 @@ module GraphNjae
       #(vertices_to_me[1..-1] || []) + other_vertices#
       self.edges.map {|e| e.vertices.take_while {|v| v != self} + 
                       e.vertices.drop_while {|v| v != self}[1..-1]}.flatten
+    end
+    
+    def to_s
+      '<V: ' + self.name + '>'
     end
     
   end
