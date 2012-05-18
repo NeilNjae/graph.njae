@@ -316,6 +316,169 @@ module GraphNjae
           v.similarity.should be_within(0.02).of(expected_similarities[v.name])
         end
       end
+      
+      it "similarity floods a graph of three nodes, a -- b -- c, given a block that performs the default update" do
+        g1 = Graph.new
+        g2 = Graph.new
+        g1v1 = Vertex.new(:name => :g1v1)
+        g1v2 = Vertex.new(:name => :g1v2)
+        g1v3 = Vertex.new(:name => :g1v3)
+        g1.connect(g1v1, g1v2, :type => :t1)
+        g1.connect(g1v2, g1v3, :type => :t2)
+        g2v1 = Vertex.new(:name => :g2v1)
+        g2v2 = Vertex.new(:name => :g2v2)
+        g2v3 = Vertex.new(:name => :g2v3)
+        g2.connect(g2v1, g2v2, :type => :t1)
+        g2.connect(g2v2, g2v3, :type => :t2)
+        pg = g1.product g2
+        
+        pg.initial_similarity
+        pg.similarity_flood do |v|
+          edge_groups = v.edges.group_by {|e| e.type }
+          edge_groups.each do |type, edges|
+            n = edges.length
+            edges.each do |e|
+              e.other_end(v).similarity += v.last_similarity / n
+            end
+          end
+          v.similarity
+        end
+        expected_similarities = {
+          "g1v1:g2v1" => 0.5,
+          "g1v1:g2v2" => 0.6666666666666666,
+          "g1v2:g2v1" => 0.6666666666666666,
+          "g1v2:g2v2" => 1.0,
+          "g1v2:g2v3" => 0.6666666666666666,
+          "g1v3:g2v2" => 0.6666666666666666,
+          "g1v3:g2v3" => 0.5}
+        pg.vertices.each do |v|
+          name = v.g1_vertex.name.to_s + ':' + v.g2_vertex.name.to_s
+          v.similarity.should be_within(0.001).of(expected_similarities[name])
+        end
+      end
+
+      it "similarity floods a graph of three nodes, a -- b -- c, given a block that performs a different update (method A)" do
+        g1 = Graph.new
+        g2 = Graph.new
+        g1v1 = Vertex.new(:name => :g1v1)
+        g1v2 = Vertex.new(:name => :g1v2)
+        g1v3 = Vertex.new(:name => :g1v3)
+        g1.connect(g1v1, g1v2, :type => :t1)
+        g1.connect(g1v2, g1v3, :type => :t2)
+        g2v1 = Vertex.new(:name => :g2v1)
+        g2v2 = Vertex.new(:name => :g2v2)
+        g2v3 = Vertex.new(:name => :g2v3)
+        g2.connect(g2v1, g2v2, :type => :t1)
+        g2.connect(g2v2, g2v3, :type => :t2)
+        pg = g1.product g2
+        
+        pg.initial_similarity
+        pg.similarity_flood do |v|
+          v.similarity = v.initial_similarity
+          edge_groups = v.edges.group_by {|e| e.type }
+          edge_groups.each do |type, edges|
+            n = edges.length
+            edges.each do |e|
+              e.other_end(v).similarity += v.last_similarity / n
+            end
+          end
+          v.similarity
+        end
+        expected_similarities = {
+          "g1v1:g2v1" => 0.9269662921348315,
+          "g1v1:g2v2" => 1.0,
+          "g1v2:g2v1" => 0.6179775280898876,
+          "g1v2:g2v2" => 1.0,
+          "g1v2:g2v3" => 1.0,
+          "g1v3:g2v2" => 0.6179775280898876,
+          "g1v3:g2v3" => 0.6179775280898876}
+        pg.vertices.each do |v|
+          name = v.g1_vertex.name.to_s + ':' + v.g2_vertex.name.to_s
+          v.similarity.should be_within(0.001).of(expected_similarities[name])
+        end
+      end
+
+      it "similarity floods a graph of three nodes, a -- b -- c, given a block that performs a different update (method B)" do
+        g1 = Graph.new
+        g2 = Graph.new
+        g1v1 = Vertex.new(:name => :g1v1)
+        g1v2 = Vertex.new(:name => :g1v2)
+        g1v3 = Vertex.new(:name => :g1v3)
+        g1.connect(g1v1, g1v2, :type => :t1)
+        g1.connect(g1v2, g1v3, :type => :t2)
+        g2v1 = Vertex.new(:name => :g2v1)
+        g2v2 = Vertex.new(:name => :g2v2)
+        g2v3 = Vertex.new(:name => :g2v3)
+        g2.connect(g2v1, g2v2, :type => :t1)
+        g2.connect(g2v2, g2v3, :type => :t2)
+        pg = g1.product g2
+        
+        pg.initial_similarity
+        pg.similarity_flood do |v|
+          v.similarity = 0.0
+          edge_groups = v.edges.group_by {|e| e.type }
+          edge_groups.each do |type, edges|
+            n = edges.length
+            edges.each do |e|
+              e.other_end(v).similarity += (v.initial_similarity + v.last_similarity) / n
+            end
+          end
+          v.similarity
+        end
+        expected_similarities = {
+          "g1v1:g2v1" => 1.0,
+          "g1v1:g2v2" => 1.0,
+          "g1v2:g2v1" => 0.0,
+          "g1v2:g2v2" => 1.0,
+          "g1v2:g2v3" => 1.0,
+          "g1v3:g2v2" => 0.0,
+          "g1v3:g2v3" => 0.0}
+        pg.vertices.each do |v|
+          name = v.g1_vertex.name.to_s + ':' + v.g2_vertex.name.to_s
+          v.similarity.should be_within(0.001).of(expected_similarities[name])
+        end
+      end
+
+      it "similarity floods a graph of three nodes, a -- b -- c, given a block that performs a different update (method C)" do
+        g1 = Graph.new
+        g2 = Graph.new
+        g1v1 = Vertex.new(:name => :g1v1)
+        g1v2 = Vertex.new(:name => :g1v2)
+        g1v3 = Vertex.new(:name => :g1v3)
+        g1.connect(g1v1, g1v2, :type => :t1)
+        g1.connect(g1v2, g1v3, :type => :t2)
+        g2v1 = Vertex.new(:name => :g2v1)
+        g2v2 = Vertex.new(:name => :g2v2)
+        g2v3 = Vertex.new(:name => :g2v3)
+        g2.connect(g2v1, g2v2, :type => :t1)
+        g2.connect(g2v2, g2v3, :type => :t2)
+        pg = g1.product g2
+        
+        pg.initial_similarity
+        pg.similarity_flood do |v|
+          v.similarity = v.initial_similarity + v.last_similarity
+          edge_groups = v.edges.group_by {|e| e.type }
+          edge_groups.each do |type, edges|
+            n = edges.length
+            edges.each do |e|
+              e.other_end(v).similarity += (v.initial_similarity + v.last_similarity) / n
+            end
+          end
+          v.similarity
+        end
+        expected_similarities = {
+          "g1v1:g2v1" => 0.8282781862745098,
+          "g1v1:g2v2" => 1.0,
+          "g1v2:g2v1" => 0.41421568627450983,
+          "g1v2:g2v2" => 1.0,
+          "g1v2:g2v3" => 1.0,
+          "g1v3:g2v2" => 0.41421568627450983,
+          "g1v3:g2v3" => 0.41421568627450983}
+        pg.vertices.each do |v|
+          name = v.g1_vertex.name.to_s + ':' + v.g2_vertex.name.to_s
+          v.similarity.should be_within(0.001).of(expected_similarities[name])
+        end
+      end
     end # similarity_flood
     
   end
