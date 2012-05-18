@@ -66,6 +66,10 @@ module GraphNjae
     end
     
     
+    # Calculates the initial similarity of each vertex in a product graph.
+    # If passed an optional block, that block is used to find the 
+    # initial similarity. If no block is given, every vertex is given
+    # an initial similarity of 1.0.
     def initial_similarity
       self.vertices.each do |v|
         if block_given?
@@ -77,8 +81,16 @@ module GraphNjae
       end
     end
     
-    # Performs similarity flooding on a graph
+    # Performs similarity flooding on a graph, as described by 
+    # Sergey Melnik, Hector Garcia-Molina, and Erhard Rahm, 
+    # "Similarity Flooding: A Versatile Graph Matching Algorithm 
+    #    and its Application to Schema Matching", Proceedings of 
+    # the 18th International Conference on Data Engineering (ICDE’02)
+    #
     # Assumes that the initial similarity has already been calculated
+    # If passed an optional block, it uses that block to update the 
+    # similarity on each iteration. If no block is passed, it uses the 
+    # default similarity updating method from the paper.
     def similarity_flood(opts = {})
       max_iterations = opts[:iterations] || 100
       max_residual = opts[:max_residual] || 0.001
