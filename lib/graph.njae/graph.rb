@@ -105,12 +105,6 @@ module GraphNjae
             end
           end
         end
-#         self.vertices.each do |v|
-#           n = v.neighbours.length
-#           v.neighbours.each do |neighbour|
-#             neighbour.similarity += v.last_similarity / n
-#           end
-#         end
         max_similarity = vertices.map {|v| v.similarity}.max
         self.vertices.each do |v|
           v.similarity = v.similarity / max_similarity
