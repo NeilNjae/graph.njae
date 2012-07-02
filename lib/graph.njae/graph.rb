@@ -1,5 +1,3 @@
-require 'ostruct'
-
 require 'logger'
 $log = Logger.new(STDERR)
 $log.level = Logger::WARN

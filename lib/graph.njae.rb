@@ -1,5 +1,7 @@
 require 'bundler/setup'
 
-require 'graph.njae/graph'
-require 'graph.njae/edge'
-require 'graph.njae/vertex'
+require 'ostruct'
+
+require_relative 'graph.njae/graph'
+require_relative 'graph.njae/edge'
+require_relative 'graph.njae/vertex'

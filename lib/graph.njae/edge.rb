@@ -1,5 +1,3 @@
-require 'ostruct'
-
 # A simple graph library
 
 module GraphNjae
@@ -48,6 +46,23 @@ module GraphNjae
     def to_s
       '<E: ' + self.type.to_s + ' [' + self.vertices.map {|n| n.to_s}.join(', ') + '] >'
     end
+    
+    def to_dot(opts = {})
+      if block_given?
+        yield self
+      else
+        dot = self.connections[0].end.object_id.to_s + " -- " + self.connections[1].end.object_id.to_s
+        if opts.size > 0
+          dot << ' {'
+          dot << opts.keys.map { |k|
+            (k.to_s + ' = "' + self.instance_eval(opts[k].to_s).to_s) + '"'
+                        }.join(', ')
+          dot << '}'
+        end
+        dot << ';'
+      end
+    end
+
   end
   
   # A connection between an Edge and a Vertex.The connection can have arbitrary attributes,

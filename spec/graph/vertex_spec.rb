@@ -242,5 +242,27 @@ module GraphNjae
         v3.neighbours.uniq.length.should == 1
       end
     end # #neighbours
+    
+    describe "#to_dot" do
+      it "describes a vertex in dot notation" do
+        v = Vertex.new
+        v.to_dot.should == "#{v.object_id.to_s};"
+      end
+
+      it "describes a vertex in dot notation, using given attributes" do
+        v = Vertex.new
+        v.name = "vertex"
+        v.shape = "house"
+        vdot = v.to_dot :label => :name, :shape => :shape
+        vdot.should == "#{v.object_id.to_s} {label = \"vertex\", shape = \"house\"};"
+      end
+      
+      it "describes a vertex using a block" do
+        v = Vertex.new
+        v.field1 = "f1"
+        vdot = v.to_dot {|v| v.field1 + ';'}
+        vdot.should == "#{v.field1};"
+      end
+    end # #to_dot
   end
 end

@@ -1,5 +1,3 @@
-require 'ostruct'
-
 # A simple graph library
 
 module GraphNjae
@@ -41,6 +39,22 @@ module GraphNjae
     
     def to_s
       '<V: ' + self.name + '>'
+    end
+    
+    def to_dot(opts = {})
+      if block_given?
+        yield self
+      else
+        dot = self.object_id.to_s
+        if opts.size > 0
+          dot << ' {'
+          dot << opts.keys.map { |k|
+            (k.to_s + ' = "' + self.instance_eval(opts[k].to_s).to_s) + '"'
+                        }.join(', ')
+          dot << '}'
+        end
+        dot << ';'
+      end
     end
     
   end
