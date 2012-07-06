@@ -36,6 +36,31 @@ module GraphNjae
       edge << vertex1 << vertex2
     end
     
+    def to_dot(opts = {})
+      vertex_args = opts[:vertex_args] || {}
+      vertex_block = opts[:vertex_block] || nil
+      edge_args = opts[:edge_args] || {}
+      edge_block = opts[:edge_block] || nil
+      dot = "graph {\n"
+      self.vertices.each do |v|
+        if vertex_block.nil?
+          dot << v.to_dot(vertex_args)
+        else
+          dot << v.do_dot(&vertex_block)
+        end
+        dot << "\n"
+      end
+      self.edges.each do |e|
+        if edge_block.nil?
+          dot << e.to_dot(edge_args)
+        else
+          dot << e.do_dot(&lambda {edge_block})
+        end
+        dot << "\n"
+      end
+      dot << '}'
+    end
+    
     # Form a product graph of this graph and the other.
     # Return the product graph.
     def product(other)
