@@ -38,7 +38,7 @@ module GraphNjae
     end
     
     def to_s
-      '<V: ' + self.name + '>'
+      '<V: ' + self.name.to_s + '>'
     end
     
     def to_dot(opts = {})

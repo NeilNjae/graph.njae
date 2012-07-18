@@ -29,8 +29,18 @@ module GraphNjae
       end
     end # adds attributes
     
-    describe '#<<' do
-      it 'adds a new vertex to an edge (with a connection)' do
+    describe "#to_s" do
+      it "returns the string form of an edge" do
+        v1 = Vertex.new :name => :v1
+        v2 = Vertex.new :name => :v2
+        e.type = :test
+        e << v1 << v2
+        e.to_s.should == '<E: test [<V: v1>, <V: v2>] >'
+      end
+    end
+    
+    describe "#<<" do
+      it "adds a new vertex to an edge (with a connection)" do
         e.connections.should be_empty
         e << v1
         e.should have(1).connections
