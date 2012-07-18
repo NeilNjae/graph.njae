@@ -46,7 +46,7 @@ module GraphNjae
         if vertex_block.nil?
           dot << v.to_dot(vertex_args)
         else
-          dot << v.do_dot(&vertex_block)
+          dot << v.to_dot(&vertex_block)
         end
         dot << "\n"
       end
@@ -54,7 +54,7 @@ module GraphNjae
         if edge_block.nil?
           dot << e.to_dot(edge_args)
         else
-          dot << e.do_dot(&lambda {edge_block})
+          dot << e.to_dot(&edge_block)
         end
         dot << "\n"
       end
