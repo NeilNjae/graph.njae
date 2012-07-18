@@ -25,6 +25,14 @@ module GraphNjae
         v.score.should == 15
       end
     end # adds attributes
+
+    describe "#to_s" do
+      it "returns the string form of a vertex" do
+        v.name = :v1
+        v.to_s.should == '<V: v1>'
+      end
+    end
+
     
     describe "#<<" do
       it "adds a single edge between vertices" do
